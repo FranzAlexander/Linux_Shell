@@ -3,5 +3,7 @@
 
 int main(int argc, char **argv)
 {
-    return EXIT_SUCCESS;
+	printf("%d", argc);
+	printf("%s", *argv);
+	return EXIT_SUCCESS;
 }
