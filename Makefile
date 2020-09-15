@@ -1,39 +1,52 @@
-# Define the build directory
-BIN_DIR := bin
-BUILD_DIR := $(BIN_DIR)/build
-OBJ_DIR := $(BIN_DIR)/obj
+# Define the directories.
+PROJDIR := $(realpath $(CURDIR))
+BINDIR := $(PROJDIR)/bin
+OBJDIR := $(BINDIR)/obj
+SOURCEDIR := $(PROJDIR)/src
 
-# Define the source file directories.
-SRC_DIR := src/*
+# Get all source directories.
+SRCDIRS := $(sort $(dir $(wildcard $(SOURCEDIR)/*/)))
 
-# Define the source files.
-SRCS := $(wildcard $(SRC_DIR)/*.c)
+# Define the include paths.
+INCLUDES := $(foreach dir, $(SRCDIRS), $(addprefix -I, $(dir)))
 
+# Get all source files.
+SRCS := $(foreach dir, $(SRCDIRS), $(wildcard $(dir)*.c))
+
+# Compile object files.
 OBJS := $(SRCS:%.c=%.o)
 DEPS := $(OBJS:%.o=%.d)
 
-TARGET = azShell
+# Name of executable.
+TARGET = azshell
 
+# Compiler to use.
 CC = gcc
 
-CFLAGS = -g3 -Wall -Wextra -Werror -Wshadow -Wdouble-promotion -Wformat=2 -Wformat-truncation -Wundef -fno-common \
-	 -Wpedantic -Wconversion -Wcast-align -Wunused -Wpointer-arith -Wcast-qual \
-	 -Wmissing-prototypes -Wno-missing-braces -I. -I$(SRC_DIR)
+# Compiler flags.
+CFLAGS = -g3 -Wall -Wextra -Werror -Wshadow -Wdouble-promotion -Wformat=2 -Wformat-truncation \
+	 -Wundef -fno-common -Wpedantic -Wconversion -Wcast-align -Wunused -Wpointer-arith \
+	 -Wcast-qual -Wmissing-prototypes -Wno-missing-braces
+
+PSEP = $(strip /)
+
+.PHONY: all clean directories
+
+all: directories $(TARGET)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+	@echo Building Object Files
+	$(CC) -c $(CFLAGS) $(INCLUDES) -o $@ $< 
 
 $(TARGET): $(OBJS)
-	@echo -e "\t" $(CC) $(CFLAGS) $(OBJS) $(TARGET) -o $@
-	@$(CC) $(CFLAGS) -o $@ $^
-
-.PHONY: make_dirs
-	make_dirs: $(BUILD_DIR) $(OBJ_DIR)
-
-$(BUILD_DIR):
-	$(shell mkdir -p $@)
-
-$(OBJ_DIR):
-	$(shell mkdir -p $@)
+	$(CC) $(CFLAGS) $^ -o $@
 
 -include $(DEPS)
+
+directories:
+	mkdir -p $(BINDIR) 2>/dev/null
+	mkdir -p $(OBJDIR) 2>/dev/null
+
+clean:
+	rm -rf $(BINDIR) 2>/dev/null
+	@echo Done cleaning!
