@@ -2,35 +2,69 @@
 
 void az_loop(void)
 {
-	while(1)
+	while (1)
 	{
 		printf("azshell> ");
+		
+		char *line = read_line();
+
+		char **args = tokenize(line);
+
+		printf("%s\n", args[0]);
+
+		free(line);
+		free(args);
 	}
 }
 
-char *read_line(void)
+/*
+ * Reads a line from the command line using the getline function.
+ * */
+char* read_line(void)
 {
-	char *buffer = NULL;
 	size_t size = 0;
+	char *line = malloc(sizeof(char));
 
-	if((getline(&buffer, &size, stdin)) != -1)
+	if ((getline(&line, &size, stdin)) == -1)
 	{
-		return buffer;
+		if(feof(stdin))
+		{
+			exit(EXIT_SUCCESS);
+		}
+		else
+		{
+			perror("Failed to read line input!\n");
+			exit(EXIT_FAILURE);
+		}
 	}
-
-	free(buffer);
-	return "";
+	else
+	{
+		return line;
+	}
 }
 
-void tokenize(char* line, char *args[])
+char** tokenize(char *line)
 {
-	char dlim[2] = "-";
+	const char dlim[2] = "-";
+	char **args = malloc(sizeof(char) * 50);
+	if(args == NULL)
+	{
+		perror("Failed to allocate memory!\n");
+		exit(EXIT_FAILURE);
+	}
+
 	char *token = strtok(line, dlim);
 
-	for(size_t i = 0; i < array_size(token); i++)
+	size_t size = 0;
+
+	while(token != NULL)
 	{
-		args[i] = strtok(NULL, dlim);
+		args[size] = token;
+		token = strtok(NULL, dlim);
+		size++;
 	}
+
+	return args;
 }
 
 void signal_handler(int *s)

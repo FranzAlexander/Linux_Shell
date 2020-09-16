@@ -21,12 +21,14 @@ DEPS := $(OBJS:%.o=%.d)
 TARGET = azshell
 
 # Compiler to use.
-CC = gcc
+CC = gcc-9
 
 # Compiler flags.
-CFLAGS = -g3 -Wall -Wextra -Werror -Wshadow -Wdouble-promotion -Wformat=2 -Wformat-truncation \
+CFLAGS = -Wall -Wextra -Werror -Wshadow -Wdouble-promotion -Wformat=2 -Wformat-overflow -Wformat-truncation \
 	 -Wundef -fno-common -Wpedantic -Wconversion -Wcast-align -Wunused -Wpointer-arith \
-	 -Wcast-qual -Wmissing-prototypes -Wno-missing-braces
+	 -Wcast-qual -Wmissing-prototypes -Wno-missing-braces -g3 -ggdb3 -fno-eliminate-unused-debug-symbols\
+	 -fvar-tracking -fno-diagnostics-show-line-numbers -Warray-bounds -Wattribute-alias \
+	 -Wmissing-attributes -Wstringop-truncation
 
 PSEP = $(strip /)
 
@@ -35,7 +37,7 @@ PSEP = $(strip /)
 all: directories $(TARGET)
 
 %.o: %.c
-	@echo Building Object Files
+	@echo Building Object Files $$@
 	$(CC) -c $(CFLAGS) $(INCLUDES) -o $@ $< 
 
 $(TARGET): $(OBJS)
@@ -49,4 +51,5 @@ directories:
 
 clean:
 	rm -rf $(BINDIR) 2>/dev/null
+	rm -f $(TARGET) 2>/dev/null
 	@echo Done cleaning!
