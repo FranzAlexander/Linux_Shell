@@ -32,7 +32,7 @@ CFLAGS = -Wall -Wextra -Werror -Wshadow -Wdouble-promotion -Wformat=2 -Wformat-o
 
 PSEP = $(strip /)
 
-.PHONY: all clean directories
+.PHONY: all clean directories git
 
 all: directories $(TARGET)
 
@@ -44,6 +44,11 @@ $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 -include $(DEPS)
+
+git:
+	git add .
+	git commit -m "$m"
+	git push origin "$b"
 
 directories:
 	mkdir -p $(BINDIR) 2>/dev/null

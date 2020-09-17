@@ -7,11 +7,25 @@ void az_loop(void)
 		printf("azshell> ");
 		
 		char *line = read_line();
+		char **args = malloc(sizeof(char) * 50);
+		if(args == NULL)
+		{
+			perror("Failed to allocate memory!\n");
+			return;
+		}
 
-		char **args = tokenize(line);
+		if(*line == '\n')
+		{
+			continue;
+		}
 
-		printf("%s\n", args[0]);
-
+		int arg_num = tokenize(line, args);
+	
+		for(int i = 0; i < arg_num; i++)
+		{
+			printf("%s\n", args[i]);
+		}
+	
 		free(line);
 		free(args);
 	}
@@ -20,7 +34,7 @@ void az_loop(void)
 /*
  * Reads a line from the command line using the getline function.
  * */
-char* read_line(void)
+char *read_line(void)
 {
 	size_t size = 0;
 	char *line = malloc(sizeof(char));
@@ -43,19 +57,13 @@ char* read_line(void)
 	}
 }
 
-char** tokenize(char *line)
+int tokenize(char *line, char **args)
 {
-	const char dlim[2] = "-";
-	char **args = malloc(sizeof(char) * 50);
-	if(args == NULL)
-	{
-		perror("Failed to allocate memory!\n");
-		exit(EXIT_FAILURE);
-	}
-
+	const char *dlim = " -\t\n";
+	
 	char *token = strtok(line, dlim);
 
-	size_t size = 0;
+	int size = 0;
 
 	while(token != NULL)
 	{
@@ -64,7 +72,7 @@ char** tokenize(char *line)
 		size++;
 	}
 
-	return args;
+	return size;
 }
 
 void signal_handler(int *s)
@@ -72,3 +80,4 @@ void signal_handler(int *s)
 	printf("Caught singal %ls, coming out...\n", s);
 	exit(1);
 }
+

@@ -1,3 +1,3 @@
 # Linux_Shell
-
-#delete: testing git
+<<<<<< Franz
+System function not permitted in Assignment 2 (shell)
