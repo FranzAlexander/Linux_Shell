@@ -1,3 +1,6 @@
+#ifndef CORE_H
+#define CORE_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -10,6 +13,8 @@ void az_loop(void);
 
 char *read_line(void);
 
-char **tokenize(char *line);
+int tokenize(char *line, char **args);
 
 void signal_handler(int *s);
+
+#endif // CORE_H
