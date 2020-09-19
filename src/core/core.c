@@ -23,7 +23,8 @@ void az_loop(void)
 	
 		for(int i = 0; i < arg_num; i++)
 		{
-			printf("%s\n", args[i]);
+			//printf("%s\n", args[i]);
+			command_caller(args[i]);
 		}
 	
 		free(line);
