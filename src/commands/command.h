@@ -5,10 +5,15 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#define BLU "\x1B[34m"
+#define RESET "\x1B[0m"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 //unsure the purpose of this struct.
 /*typedef struct Command
