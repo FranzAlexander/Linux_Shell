@@ -7,7 +7,7 @@
 #include <string.h>
 #include <errno.h>
 #include "macros.h"
-
+#include "command.h"
 
 void az_loop(void);
 
