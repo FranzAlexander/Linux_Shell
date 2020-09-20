@@ -4,8 +4,8 @@
 
 #include "command.h"
 
-static void ls(void);		// prints file names of current directory
-static void show(void);		// runs the show program found in test files
+//static void ls(void);		// prints file names of current directory
+//static void show(void);		// runs the show program found in test files
 
 void command_caller(char *input)
 {
@@ -32,7 +32,7 @@ static void ls(void)
 			{
 				// disregard '..' and '.' files and colour dir blue
 				if(strcmp(dir->d_name, "..") != 0 && strcmp(dir->d_name, ".") != 0)
-					printf(BLU "%s " RESET, dir->d_name);	
+					printf(BLUE "%s " RESET, dir->d_name);	
 			}
 				else
 				printf("%s ", dir->d_name);

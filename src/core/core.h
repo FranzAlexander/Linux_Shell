@@ -8,13 +8,13 @@
 #include <errno.h>
 #include "macros.h"
 #include "command.h"
+#include "signal_handler.h"
+#include "history.h"
 
 void az_loop(void);
 
 char *read_line(void);
 
 int tokenize(char *line, char **args);
-
-void signal_handler(int *s);
 
 #endif // CORE_H
