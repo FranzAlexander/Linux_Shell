@@ -2,6 +2,8 @@
 
 void az_loop(void)
 {
+	handle_signals();
+
 	while (1)
 	{
 		printf("azshell> ");
@@ -40,6 +42,12 @@ char *read_line(void)
 	size_t size = 0;
 	char *line = malloc(sizeof(char));
 
+	if(line == NULL)
+	{
+		perror("Failed to allocate memory!\n");
+		exit(EXIT_FAILURE);
+	}
+
 	if ((getline(&line, &size, stdin)) == -1)
 	{
 		if(feof(stdin))
@@ -75,10 +83,3 @@ int tokenize(char *line, char **args)
 
 	return size;
 }
-
-void signal_handler(int *s)
-{
-	printf("Caught singal %ls, coming out...\n", s);
-	exit(1);
-}
-
