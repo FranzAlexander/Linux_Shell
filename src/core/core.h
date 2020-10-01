@@ -9,7 +9,6 @@
 #include "macros.h"
 #include "command.h"
 #include "signal_handler.h"
-#include "history.h"
 
 void az_loop(void);
 
