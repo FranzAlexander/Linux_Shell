@@ -28,7 +28,7 @@ CFLAGS = -Wall -Wextra -Werror -Wshadow -Wdouble-promotion -Wformat=2 -Wformat-o
 	 -Wundef -fno-common -Wpedantic -Wconversion -Wcast-align -Wunused -Wpointer-arith \
 	 -Wcast-qual -Wmissing-prototypes -Wno-missing-braces -g3 -ggdb3 -fno-eliminate-unused-debug-symbols\
 	 -fvar-tracking -fno-diagnostics-show-line-numbers -Warray-bounds -Wattribute-alias \
-	 -Wmissing-attributes -Wstringop-truncation
+	 -Wmissing-attributes -Wstringop-truncation -O2
 
 PSEP = $(strip /)
 

@@ -2,35 +2,50 @@
 
 void az_loop(void)
 {
+	char **cmd_hist = malloc(sizeof(char) * 1000);
+	for (int i = 0; i < 1000; i+=1)
+	{
+		cmd_hist[i] = malloc(sizeof(char) * 255);
+	}
+
 	handle_signals();
 
 	while (1)
 	{
 		printf("azshell> ");
-		
+
 		char *line = read_line();
-		char **args = malloc(sizeof(char) * 50);
-		if(args == NULL)
+		char **args = malloc(sizeof(char) * MAX_ARGS);
+		if (args == NULL)
 		{
 			perror("Failed to allocate memory!\n");
-			return;
+			exit(EXIT_FAILURE);
 		}
 
-		if(*line == '\n')
+		for (int i = 0; i < MAX_ARGS; i+=1)
+		{
+			args[i] = malloc(sizeof(char) * ARG_SIZE);
+		}
+
+		if (*line == '\n')
 		{
 			continue;
 		}
 
 		int arg_num = tokenize(line, args);
-	
-		for(int i = 0; i < arg_num; i++)
+
+		for (int i = 0; i < arg_num; i+=1)
 		{
 			//printf("%s\n", args[i]);
-			command_caller(args[i]);
+			execute_command(args[i]);
 		}
-	
-		free(line);
+
+		for (int i = 0; i < MAX_ARGS; i+=1)
+		{
+			free(args[i]);
+		}
 		free(args);
+		free(line);
 	}
 }
 
@@ -42,7 +57,7 @@ char *read_line(void)
 	size_t size = 0;
 	char *line = malloc(sizeof(char));
 
-	if(line == NULL)
+	if (line == NULL)
 	{
 		perror("Failed to allocate memory!\n");
 		exit(EXIT_FAILURE);
@@ -50,7 +65,7 @@ char *read_line(void)
 
 	if ((getline(&line, &size, stdin)) == -1)
 	{
-		if(feof(stdin))
+		if (feof(stdin))
 		{
 			exit(EXIT_SUCCESS);
 		}
@@ -69,12 +84,12 @@ char *read_line(void)
 int tokenize(char *line, char **args)
 {
 	const char *dlim = " -\t\n";
-	
+
 	char *token = strtok(line, dlim);
 
 	int size = 0;
 
-	while(token != NULL)
+	while (token != NULL)
 	{
 		args[size] = token;
 		token = strtok(NULL, dlim);

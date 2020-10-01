@@ -13,8 +13,18 @@
 #include <sys/wait.h>
 #include "macros.h"
 
-static void ls(void);
-static void show(void);
+static const char *built_in[] = {"exit", "ls", "cd"};
+
+typedef struct Command
+{
+	int first;
+	int last;
+	char *sep;
+}Command;
+
+void execute_command(char *input);
+
+//static int check_build_in(char *input);
 
 // calls the relevant command for user input
 void command_caller(char *input);
