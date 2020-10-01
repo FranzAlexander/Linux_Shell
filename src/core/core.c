@@ -13,8 +13,36 @@ void az_loop(void)
 	while (1)
 	{
 		printf("azshell> ");
+		
+		char *cmd;
+		int lc = 0;
+		char *c;
+		command **cl;
 
-		char *line = read_line();
+		cmd = (char *) malloc(CMD_LENGTH);
+
+		cmd = fgets(cmd, CMD_LENGTH, stdin);
+		c = index(cmd, '\n');
+		*c = '\0';
+		//printf("Command Line : [%s] [%ld]\n", cmd, strlen(cmd));
+
+		cl = process_cmd_line(cmd, 1);
+		
+		//prints command structure for testing
+		while (cl[lc] != NULL)
+	       	{
+
+		//dump_structure(cl[lc], lc);
+		//print_human_readable(cl[lc], lc);
+		command_handler(cl[lc]);
+		lc++;
+		}
+	
+		while(wait(NULL) != -1);	//zombie killer
+		clean_up(cl);
+		free(cmd);
+
+		/*char *line = read_line();
 		char **args = malloc(sizeof(char) * MAX_ARGS);
 		if (args == NULL)
 		{
@@ -45,13 +73,15 @@ void az_loop(void)
 			free(args[i]);
 		}
 		free(args);
-		free(line);
+		free(line);*/
+		
+		
 	}
 }
 
 /*
  * Reads a line from the command line using the getline function.
- * */
+ * 
 char *read_line(void)
 {
 	size_t size = 0;
@@ -97,4 +127,4 @@ int tokenize(char *line, char **args)
 	}
 
 	return size;
-}
+}*/
