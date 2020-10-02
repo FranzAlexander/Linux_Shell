@@ -10,14 +10,18 @@ void az_loop(void)
 
 	handle_signals();
 
+	char *prompt = malloc(MAX_PROMPT_SIZE);
+	char *cwd = malloc(MAX_PATH_SIZE);	//current working directory
+	strcpy(prompt, "azshell>  ");
+
 	while (1)
 	{
-		printf("azshell> ");
-		
 		char *cmd;
 		int lc = 0;
 		char *c;
 		command **cl;
+		
+		printf("%s%s:%s%s%s", BLUE, getcwd(cwd, MAX_PATH_SIZE), GREEN, prompt, RESET);
 
 		cmd = (char *) malloc(CMD_LENGTH);
 
@@ -28,17 +32,13 @@ void az_loop(void)
 
 		cl = process_cmd_line(cmd, 1);
 		
-		//prints command structure for testing
-		while (cl[lc] != NULL)
+		while (cl[lc] != NULL)		//while command array not null
 	       	{
-
-		//dump_structure(cl[lc], lc);
-		//print_human_readable(cl[lc], lc);
-		command_handler(cl[lc]);
-		lc++;
+			command_handler(cl[lc], &prompt);
+			lc++;
 		}
 	
-		while(wait(NULL) != -1);	//zombie killer
+		while(wait(NULL) != -1);	//zombie preventer
 		clean_up(cl);
 		free(cmd);
 
@@ -77,6 +77,8 @@ void az_loop(void)
 		
 		
 	}
+	free(prompt);
+	free(cwd);
 }
 
 /*

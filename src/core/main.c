@@ -4,8 +4,8 @@
 
 int main(int argc, char **argv)
 {
-	printf("%d", argc);
-	printf("%s", *argv);
+	argc = argc;		//unused variable
+	argv = argv;		//unused variable
 	az_loop();
 	return EXIT_SUCCESS;
 }

@@ -12,6 +12,6 @@
 #include "macros.h"
 #include "parser.h"
 
-void command_handler(command * c);
+void command_handler(command * c, char **prompt);
 
 #endif // COMMAND_HANDLER_H
