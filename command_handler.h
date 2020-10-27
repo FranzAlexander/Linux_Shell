@@ -9,6 +9,7 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <glob.h>
 #include "macros.h"
 #include "parser.h"
 
