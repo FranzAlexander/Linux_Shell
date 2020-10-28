@@ -24,18 +24,22 @@ void command_handler(command * c, char **prompt)
 	{
 		if(strcmp(c->com_name, "exit") == 0)		// exit
 			_exit(0);
-		else if(strcmp(c->com_name, "ls") == 0)		// ls
+		else if(strcmp(c->com_name, "ls") == 0)	// ls
 			execute("/bin/ls", c->argv);
-		else if(strcmp(c->com_name, "ps") == 0)		// ps
+		else if(strcmp(c->com_name, "ps") == 0)	// ps
 			execute("/bin/ps", c->argv);
 		else if(strcmp(c->com_name, "pwd") == 0)	// pwd
                         execute("/bin/pwd", c->argv);
-                else if(strcmp(c->com_name, "cd") == 0)        	// cd
+                else if(strcmp(c->com_name, "cd") == 0)        // cd
                         change_directory(c->argv[1]);
 		else if(strcmp(c->com_name, "prompt") == 0)	// prompt
 			change_prompt(prompt, c->argv);
 		else if(strcmp(c->com_name, "./show") == 0 || strcmp(c->com_name, "show") == 0)
 			execute("src/commands/tests/./show", c->argv);
+		else if(strcmp(c->com_name, "sleep") == 0)	// sleep
+			execute("/bin/sleep", c->argv);
+		else if(strcmp(c->com_name, "echo") == 0)	// echo
+                        execute("/bin/echo", c->argv);
 		else
 		{
 			printf("'%s' not recognised\n", c->com_name);
