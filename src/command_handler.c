@@ -41,6 +41,8 @@ void command_handler(Command *cmd, char **prompt)
             }
             else if (strcmp(cmd->cmd_name, "cd") == 0) // cd
             {
+                printf("%s", cmd->cmd_name);
+                printf("%s", cmd->argv[1]);
                 change_directory(cmd->argv[1]);
             }
             else if (strcmp(cmd->cmd_name, "prompt") == 0) // prompt
