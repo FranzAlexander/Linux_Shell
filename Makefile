@@ -1,21 +1,61 @@
-# Define the build directory
-BUILD_DIR = ./build
+# Define the directories.
+PROJDIR := $(realpath $(CURDIR))
+BINDIR := $(PROJDIR)/bin
+OBJDIR := $(BINDIR)/obj
+SOURCEDIR := $(PROJDIR)/src
 
-# Define the source files.
-SRCS := $(wildcard src/*/*.c)
+# Get all source directories.
+SRCDIRS := $(sort $(dir $(wildcard $(SOURCEDIR)/*/)))
 
-OBJS = $(SRCS:.c=.o)
+# Define the include paths.
+INCLUDES := $(foreach dir, $(SRCDIRS), $(addprefix -I, $(dir)))
 
-TARGET ?= azShell
+# Get all source files.
+SRCS := $(foreach dir, $(SRCDIRS), $(wildcard $(dir)*.c))
 
-CC = gcc
+# Compile object files.
+OBJS := $(SRCS:%.c=%.o)
+DEPS := $(OBJS:%.o=%.d)
 
-CFLAGS = -g3 -Wall -Wextra -Werror -Wshadow -Wdouble-promotion -Wformat=2 -Wformat-truncation -Wundef -fno-common \
-	 -Wpedantic -Wconversion -Wcast-align -Wunused -Wpointer-arith -Wcast-qual \
-	 -Wmissing-prototypes -Wno-missing-braces
+# Name of executable.
+TARGET = azshell
+
+# Compiler to use.
+CC = gcc-9
+
+# Compiler flags.
+CFLAGS = -Wall -Wextra -Wshadow -Wdouble-promotion -Wformat=2 -Wformat-overflow -Wformat-truncation \
+	 -Wundef -fno-common -Wpedantic -Wconversion -Wcast-align  -Wpointer-arith \
+	 -Wcast-qual -Wmissing-prototypes -Wno-missing-braces -g3 -ggdb3 -fno-eliminate-unused-debug-symbols\
+	 -fvar-tracking -fno-diagnostics-show-line-numbers -Warray-bounds -Wattribute-alias \
+	 -Wmissing-attributes -Wstringop-truncation -O2
+#-Wunused
+#-Werror
+PSEP = $(strip /)
+
+.PHONY: all clean directories git
+
+all: directories $(TARGET)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+	@echo Building Object Files $$@
+	$(CC) -c $(CFLAGS) $(INCLUDES) -o $@ $< 
 
-$(BUILD_DIR)/$(TARGET): $(OBJS)
-	$(CC) -o $@ $^
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) $^ -o $@
+
+-include $(DEPS)
+
+git:
+	git add .
+	git commit -m "$m"
+	git push origin "$b"
+
+directories:
+	mkdir -p $(BINDIR) 2>/dev/null
+	mkdir -p $(OBJDIR) 2>/dev/null
+
+clean:
+	rm -rf $(BINDIR) 2>/dev/null
+	rm -f $(TARGET) 2>/dev/null
+	@echo Done cleaning!
