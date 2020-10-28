@@ -1,9 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "command.h"
+#include "parser.h"
+#include "command_handler.h"
 
 #define BLUE "\x1B[34m"
+#define GREEN "\x1B[32m"
 #define RESET "\x1B[0m"
 
 static char *read_line(void);
@@ -34,9 +36,14 @@ static char *read_line(void)
 int main(void)
 {
     Command *cmd;
+
+    char *prompt = (char *)malloc(sizeof(char) * MAX_PROMPT_SIZE);
+    char *cwd = (char *)malloc(sizeof(char) * MAX_PATH_SIZE); // Current working directory
+    strcpy(prompt, "azshell>");
+
     while (1)
     {
-        printf(BLUE "$: " RESET);
+        printf("%s%s:%s%s%s", BLUE, getcwd(cwd, MAX_PATH_SIZE), GREEN, prompt, RESET);
 
         char *line = read_line();
         if (*line == '\0' || strlen(line) == 0)
@@ -45,10 +52,7 @@ int main(void)
         }
 
         cmd = parse_command(line);
-        for (int i = 0; i < cmd->argc; i += 1)
-        {
-            printf("Hello: %s\n", cmd->argv[i]);
-        }
-        execute_command(cmd);
+
+        command_handler(cmd, &prompt);
     }
 }
