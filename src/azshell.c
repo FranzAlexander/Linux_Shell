@@ -39,7 +39,6 @@ int main(void)
         printf(BLUE "$: " RESET);
 
         char *line = read_line();
-        printf("First Line: %s\n", line);
         if (*line == '\0' || strlen(line) == 0)
         {
             continue;
