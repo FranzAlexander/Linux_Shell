@@ -109,7 +109,7 @@ Command *parse_command(char *line)
     char *line_pos = line;
     size_t counter = 0;
 
-    //int mode = (line[line_size - 1] == '&') ? BACKGROUND : FOREGROUND;
+    int mode = (line[line_size - 1] == '&') ? BACKGROUND : FOREGROUND;
 
     // Loop through the line.
     for (size_t i = 0; i < line_size; i += 1)
@@ -118,7 +118,6 @@ Command *parse_command(char *line)
         * |, & or the end of the line brake up the string. */
         if (*line == '|' || *line == '&' || *line == '\n')
         {
-            int mode = 0;
             if (*line == '|')
             {
                 mode = PIPEPLINE;
