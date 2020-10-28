@@ -20,7 +20,7 @@ enum EXECUTION
 
 typedef struct Command
 {
-    char* cmd;
+    char *cmd_name;
     int argc;
     char **argv;
     char *input_path;

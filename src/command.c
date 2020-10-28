@@ -11,6 +11,7 @@ static int token_helper(char *line, char **args)
     char *token = strtok(line, dlim);
 
     int size = 0;
+    int flags = 0;
     glob_t glob_buffer;
     int glob_counter = 0;
 
@@ -21,9 +22,10 @@ static int token_helper(char *line, char **args)
             args[size] = (char *)malloc(sizeof(char) * 50);
         }
 
-        if (strchr(token, '*') != NULL)
+        if (strchr(token, '*') != NULL || strchr(token, '?') != NULL)
         {
-            glob(token, 0, NULL, &glob_buffer);
+            flags |= (glob_counter > 1 ? GLOB_APPEND : 0);
+            glob(token, flags, NULL, &glob_buffer);
             glob_counter = (int)glob_buffer.gl_pathc;
         }
 
@@ -53,7 +55,8 @@ static int token_helper(char *line, char **args)
 static Command *new_command(char *line)
 {
     Command *cmd = (Command *)malloc(sizeof(Command));
-    strcpy(cmd->cmd, line);
+    cmd->cmd_name = (char *)malloc(sizeof(char) * 25);
+    strcpy(cmd->cmd_name, line);
     cmd->argv = (char **)malloc(sizeof(char *) * 25);
     if (cmd->argv == NULL)
     {
@@ -145,7 +148,7 @@ void execute_command(struct Command *cmd)
 
     pid_t pid = 0;
 
-    for (current = cmd; current->next != NULL; current = current->next)
+    for (current = cmd; current != NULL; current = current->next)
     {
         if (current->mode == BACKGROUND)
         {
@@ -169,6 +172,10 @@ void execute_command(struct Command *cmd)
             else if (strcmp(current->argv[0], "ps") == 0)
             {
                 execute("/bin/ps", current->argv);
+            }
+            else
+            {
+                execute(current->argv[0], current->argv);
             }
         }
 
