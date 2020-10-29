@@ -3,7 +3,7 @@
 #include <pwd.h>
 #include "command_handler.h"
 
-static void execute(char* path, char *argv[]);
+static void execute(char* path, char *argv[], char* output);
 static void change_directory(char *path);
 static void change_prompt(char **prompt, char *argv[]);
 
@@ -22,50 +22,43 @@ void command_handler(command * c, char **prompt)
 
 	if(pid == 0)
 	{
-	
-		//int saved_stdout = 0;
-		FILE * saved_stdout = stdout;
-		
-		if(c->redirect_out != NULL)			
-			stdout = fopen(c->redirect_out, "w+");	// output writes to file
+
 		
 		if(strcmp(c->com_name, "exit") == 0)		// exit
 			_exit(0);
 		else if(strcmp(c->com_name, "ls") == 0)	// ls
-			execute("/bin/ls", c->argv);
+			execute("/bin/ls", c->argv, c->redirect_out);
 		else if(strcmp(c->com_name, "ps") == 0)	// ps
-			execute("/bin/ps", c->argv);
+			execute("/bin/ps", c->argv, c->redirect_out);
 		else if(strcmp(c->com_name, "pwd") == 0)	// pwd
-                        execute("/bin/pwd", c->argv);
-                else if(strcmp(c->com_name, "cd") == 0)       // cd
+                        execute("/bin/pwd", c->argv, c->redirect_out);
+               else if(strcmp(c->com_name, "cd") == 0)       // cd
                         change_directory(c->argv[1]);
 		else if(strcmp(c->com_name, "prompt") == 0)	// prompt
 			change_prompt(prompt, c->argv);
 		else if(strcmp(c->com_name, "./show") == 0 || strcmp(c->com_name, "show") == 0)
-			execute("src/commands/tests/./show", c->argv);
+			execute("src/commands/tests/./show", c->argv, c->redirect_out);
 		else if(strcmp(c->com_name, "sleep") == 0)	// sleep
-			execute("/bin/sleep", c->argv);
+			execute("/bin/sleep", c->argv, c->redirect_out);
 		else if(strcmp(c->com_name, "echo") == 0)	// echo
-                        execute("/bin/echo", c->argv);
+                        execute("/bin/echo", c->argv, c->redirect_out);
+                else if(strcmp(c->com_name, "cat") == 0)	// echo
+                        execute("/bin/cat", c->argv, c->redirect_out);
 		else
 		{
 			printf("'%s' not recognised\n", c->com_name);
 			prompt = prompt; 	// unused parameter
 		}
 		
-		if(c->redirect_out != NULL)		// output writes back to terminal
-		{
-			fclose(stdout);
-			stdout = saved_stdout;
-		}
 	}
 		
 	if(pid == 0 && c->background == 1)	//kills child if not dead
 		kill(getpid(), SIGKILL);
+		
 }
 
 
-static void execute(char* path, char *argv[])
+static void execute(char* path, char *argv[], char* output)
 {
 	pid_t pid;
 
@@ -75,7 +68,17 @@ static void execute(char* path, char *argv[])
 		exit(1);
 	}
 	if (pid == 0) //if child
+	{
+		if(output != NULL)	// redirect output to file
+		{	
+			int fd = open(output, O_WRONLY|O_CREAT, 0766);
+			dup2(fd, STDOUT_FILENO);
+		}
+		
 		execv(path, argv);
+	}
+		
+		
 	if (pid > 0) //if parent
 		wait(NULL);
 }

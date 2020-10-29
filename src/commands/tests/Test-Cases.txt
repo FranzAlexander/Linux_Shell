@@ -8,7 +8,7 @@ cd
 cd ..
 exit
 
-ls -l  -t   a b c
+ls -l -t abc
 ./show a  bb  ccc  dddd 1  22  333  4444  555555
 ./show  a b c d e f g h I j k l m n o p q r s t u v w x y z 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 20 abc123xyz
 
@@ -28,22 +28,32 @@ ps  &   ls
 echo ps-command &  ps   &   echo ls-command  &  ls -l
 sleep 10  &
 
+
+NOT TESTED
 cat  <  /tmp/foo
 grep  line  <  /tmp/foo
 
+
+NOT TESTED
 ls  -l  >  /tmp/junk
 cat  /tmp/foo >  /tmp/junk2
 
+
+NOT TESTED
 cat /tmp/foo |  cat
 cat  /tmp/foo |  grep  line 
 cat  /tmp/foo  |  sort
 cat  /tmp/foo  |  sort  -r
 
+
+NOT TESTED
 cat /tmp/foo |  sort  |  sort -r  |  grep  line 
 cat | cat | cat | cat | cat | cat | cat | cat | cat | cat | cat 
 cat | cat | cat | cat | cat | cat | cat | cat | cat | cat | cat > junk
 cat | cat | cat | cat | cat | cat | cat | cat | cat | cat | grep line
 
+
+NOT TESTED
 ls -l   > junk  ;  cat < /tmp/foo ;  /bin/ls  -lt  /dev/tty*  |  grep tty  |  sort  |  head  > junk2  &  sleep 10  ;  cat  < junk2
 ls -lt | cat ;  ps | sort  &  echo ps-output ; sleep 10 & echo wait-for-10seconds ; cat /tmp/foo | cat | grep line | sort -r
 

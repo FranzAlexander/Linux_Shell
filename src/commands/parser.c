@@ -110,7 +110,7 @@ void process_cmd(char *cmd, command * result)
          pc = strtok(cmd, ">");
          simple_cmd = strdup(pc);
 
-         pc = strtok(NULL, "\0");
+         pc = strtok(NULL, " \0");
          process_simple_cmd(simple_cmd, result);
          result->redirect_out = strdup(pc);
       }
@@ -118,7 +118,7 @@ void process_cmd(char *cmd, command * result)
    else {               /*Input Redirection */
       pc = strtok(cmd, "<");
       simple_cmd = strdup(pc);
-      pc = strtok(NULL, "\0");
+      pc = strtok(NULL, " \0");
 
       /*Output redirection may have been missed becuase input is checked
        * first.*/
