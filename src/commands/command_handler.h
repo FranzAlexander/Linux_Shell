@@ -9,9 +9,12 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include "macros.h"
 #include "parser.h"
 
 void command_handler(command * c, char **prompt);
+
 
 #endif // COMMAND_HANDLER_H

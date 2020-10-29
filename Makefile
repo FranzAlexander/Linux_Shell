@@ -24,8 +24,8 @@ TARGET = azshell
 CC = gcc-9
 
 # Compiler flags.
-CFLAGS = -Wall -Wextra -Werror -Wshadow -Wdouble-promotion -Wformat=2 -Wformat-overflow -Wformat-truncation \
-	 -Wundef -fno-common -Wpedantic -Wconversion -Wcast-align -Wunused -Wpointer-arith \
+CFLAGS = -Wall -Wextra -Wshadow -Wdouble-promotion -Wformat=2 -Wformat-overflow -Wformat-truncation \
+	 -Wundef -fno-common -Wpedantic -Wconversion -Wcast-align -Wpointer-arith \
 	 -Wcast-qual -Wmissing-prototypes -Wno-missing-braces -g3 -ggdb3 -fno-eliminate-unused-debug-symbols\
 	 -fvar-tracking -fno-diagnostics-show-line-numbers -Warray-bounds -Wattribute-alias \
 	 -Wmissing-attributes -Wstringop-truncation -O2

@@ -1,0 +1,7 @@
+total 156
+-rwxrwxr-x 1 connor connor 137304 Oct 29 16:09 azshell
+drwxrwxr-x 3 connor connor   4096 Oct 28 23:03 bin
+-rw-rw-r-- 1 connor connor    331 Oct 29 16:09 foo
+-rw-rw-r-- 1 connor connor   1435 Oct 29 15:50 Makefile
+-rw-rw-r-- 1 connor connor     80 Oct 28 22:38 README.md
+drwxrwxr-x 6 connor connor   4096 Oct 29 16:09 src

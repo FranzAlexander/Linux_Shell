@@ -22,6 +22,13 @@ void command_handler(command * c, char **prompt)
 
 	if(pid == 0)
 	{
+	
+		//int saved_stdout = 0;
+		FILE * saved_stdout = stdout;
+		
+		if(c->redirect_out != NULL)			
+			stdout = fopen(c->redirect_out, "w+");	// output writes to file
+		
 		if(strcmp(c->com_name, "exit") == 0)		// exit
 			_exit(0);
 		else if(strcmp(c->com_name, "ls") == 0)	// ls
@@ -30,7 +37,7 @@ void command_handler(command * c, char **prompt)
 			execute("/bin/ps", c->argv);
 		else if(strcmp(c->com_name, "pwd") == 0)	// pwd
                         execute("/bin/pwd", c->argv);
-                else if(strcmp(c->com_name, "cd") == 0)        // cd
+                else if(strcmp(c->com_name, "cd") == 0)       // cd
                         change_directory(c->argv[1]);
 		else if(strcmp(c->com_name, "prompt") == 0)	// prompt
 			change_prompt(prompt, c->argv);
@@ -45,7 +52,13 @@ void command_handler(command * c, char **prompt)
 			printf("'%s' not recognised\n", c->com_name);
 			prompt = prompt; 	// unused parameter
 		}
-	}								
+		
+		if(c->redirect_out != NULL)		// output writes back to terminal
+		{
+			fclose(stdout);
+			stdout = saved_stdout;
+		}
+	}
 		
 	if(pid == 0 && c->background == 1)	//kills child if not dead
 		kill(getpid(), SIGKILL);
