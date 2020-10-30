@@ -13,9 +13,11 @@ void az_loop(void)
 	char *prompt = malloc(MAX_PROMPT_SIZE);
 	char *cwd = malloc(MAX_PATH_SIZE);	//current working directory
 	strcpy(prompt, "azshell>  ");
-
+	
+	
 	while (1)
 	{
+		int again = 1;
 		char *cmd;
 		int lc = 0;
 		char *c;
@@ -25,7 +27,17 @@ void az_loop(void)
 
 		cmd = (char *) malloc(CMD_LENGTH);
 
-		cmd = fgets(cmd, CMD_LENGTH, stdin);
+		while(again)
+		{
+			again = 0;
+			cmd = fgets(cmd, CMD_LENGTH, stdin);
+			if(cmd == NULL)
+			{
+				if(errno == EINTR)
+					again = 1;
+			}
+		}
+		
 		c = index(cmd, '\n');
 		*c = '\0';
 
