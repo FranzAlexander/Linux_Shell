@@ -6,32 +6,56 @@
 #include "macros.h"
 #include "parser.h"
 #include "command_handler.h"
-static void handle_signals();
-static void sigint_handler(int sig_no);
-static void sigstp_handler(int sig_no);
 
-static void sigint_handler(int sig_no)
+static void handle_signals(void);
+static void handler(int sig_no);
+static void az_loop(void);
+
+static void handler(int sig_no)
 {
-    printf("\nType exit to quite program! \n");
+    switch (sig_no)
+    {
+    case SIGINT:
+        printf("\nType exit to quit program! \n");
+        break;
+    case SIGTSTP:
+        printf("\nCan not pause program! \n");
+        break;
+    case SIGQUIT:
+        printf("\nCan not quit program, type exit!\n");
+        break;
+
+    default:
+        fprintf(stderr, "Caught wrong signal: %d\n", signal);
+        break;
+    }
 }
 
-static void sigstp_handler(int sig_no)
+static void handle_signals(void)
 {
-    pause();
-}
-
-static void handle_signals()
-{
-    struct sigaction action, tstp_action;
-    action.sa_handler = &sigint_handler;
+    struct sigaction action;
+    action.sa_handler = &handler;
     action.sa_flags = SA_RESTART;
-    sigaction(SIGINT, &action, NULL);
+    sigfillset(&action.sa_mask);
 
-    tstp_action.sa_handler = &sigstp_handler;
-    sigaction(SIGTSTP, &tstp_action, NULL);
+    if (sigaction(SIGINT, &action, NULL) == -1)
+    {
+        perror("Failed to set signal handlers!\n");
+        exit(EXIT_FAILURE);
+    }
+    if (sigaction(SIGTSTP, &action, NULL) == -1)
+    {
+        perror("Failed to set signal handlers!\n");
+        exit(EXIT_FAILURE);
+    }
+    if (sigaction(SIGQUIT, &action, NULL) == -1)
+    {
+        perror("Failed to set signal handlers!\n");
+        exit(EXIT_FAILURE);
+    }
 }
 
-void az_loop(void)
+static void az_loop(void)
 {
     handle_signals();
 
@@ -41,6 +65,7 @@ void az_loop(void)
 
     while (1)
     {
+        int again = 1;
         char *cmd;
         int lc = 0;
         char *c;
@@ -50,7 +75,16 @@ void az_loop(void)
 
         cmd = (char *)malloc(CMD_LENGTH);
 
-        cmd = fgets(cmd, CMD_LENGTH, stdin);
+        while (again)
+        {
+            again = 0;
+            cmd = fgets(cmd, CMD_LENGTH, stdin);
+            if (cmd == NULL)
+            {
+                if (errno == EINTR)
+                    again = 1;
+            }
+        }
         c = index(cmd, '\n');
         *c = '\0';
 
