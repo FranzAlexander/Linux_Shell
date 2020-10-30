@@ -37,7 +37,7 @@ void command_handler(command * c, char **prompt)
 		else if(strcmp(c->com_name, "prompt") == 0)	// prompt
 			change_prompt(prompt, c->argv);
 		else if(strcmp(c->com_name, "./show") == 0 || strcmp(c->com_name, "show") == 0)
-			execute("src/commands/tests/./show", c->argv, c->redirect_out);
+			execute("tests/./show", c->argv, c->redirect_out);
 		else if(strcmp(c->com_name, "sleep") == 0)	// sleep
 			execute("/bin/sleep", c->argv, c->redirect_out);
 		else if(strcmp(c->com_name, "echo") == 0)	// echo

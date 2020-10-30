@@ -1,8 +1,6 @@
 #ifndef MACROS_H
 #define MACROS_H
 
-#define array_size(x) (sizeof (*x) / sizeof (x[0]))
-
 #define MAX_ARGS 50
 #define ARG_SIZE 150
 
